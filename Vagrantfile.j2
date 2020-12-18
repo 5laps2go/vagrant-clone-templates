@@ -6,13 +6,6 @@
 require 'yaml'
 settings = YAML.load_file('config.yml')
 
-$script = <<SCRIPT
-curl -L https://goo.gl/TvhDAq > /home/vagrant/.ssh/authorized_keys 2>/dev/null
-chmod 700 /home/vagrant/.ssh
-chmod 600 /home/vagrant/.ssh/authorized_keys
-chown -R vagrant:vagrant /home/vagrant
-SCRIPT
-
 Vagrant.configure("2") do |config|
   config.vm.box = '$basebox'
   config.vm.define '$clonebox'
@@ -23,7 +16,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
   config.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
 
-  config.vm.provision "shell", inline: $script
+  config.ssh.insert_key = false
 
   config.vm.provider :vmware_esxi do |esxi|
     esxi.esxi_hostname = settings['esxi']['hostname']
