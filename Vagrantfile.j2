@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
   config.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
 
+  # preserve ssh insecure key for template preparation
   config.ssh.insert_key = false
 
   config.vm.provider :vmware_esxi do |esxi|
