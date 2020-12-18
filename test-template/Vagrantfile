@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+# Clone_from_templates test
+#
+require 'yaml'
+settings = YAML.load_file('config.yaml')
+
+Vagrant.configure("2") do |config|
+  config.vm.box = 'esxi_clone/dummy'		# 公開時はbox名に変更(replace '-' to '/' of clone_from_vm name)
+  config.vm.define settings['node']['hostname']
+
+  config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+  config.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
+
+  config.vm.provider :vmware_esxi do |esxi|
+    esxi.esxi_hostname = settings['esxi']['hostname']
+    esxi.esxi_username = settings['esxi']['username']
+    esxi.esxi_password = settings['esxi']['password']
+    esxi.esxi_hostport = settings['esxi']['hostport']
+
+    esxi.esxi_disk_store = settings['node']['diskstore']
+    esxi.esxi_virtual_network = ["VM Network"]
+    esxi.clone_from_vm = settings['node']['vmclone']
+    esxi.guest_name = settings['node']['hostname']
+    esxi.guest_memsize = "1024"
+    esxi.guest_numvcpus = "1"
+    esxi.local_allow_overwrite = 'True'
+  end
+end
+

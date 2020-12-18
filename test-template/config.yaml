@@ -1,0 +1,10 @@
+esxi:
+  hostname: "192.168.1.31"    # ESXi hostname or IP addr
+  username: "root"            # ESXi login user
+  password: "prompt:"         # ESXi login password("prompt:" as manual ops)
+  hostport: 22                # ESXi ssh port
+
+node:
+  vmclone:  "generic-centos7" # vm clone name
+  diskstore: "faststore1"     # datastore for guest OS
+  hostname:  "test-template"  # guest host name
