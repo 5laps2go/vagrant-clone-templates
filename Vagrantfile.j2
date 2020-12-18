@@ -8,7 +8,7 @@ settings = YAML.load_file('config.yml')
 
 Vagrant.configure("2") do |config|
   config.vm.box = '$basebox'
-  config.vm.define '$clonebox'
+  config.vm.define '$template'
 
   config.vm.box_check_update = true
   config.ssh.forward_agent = true
@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     esxi.esxi_hostport = settings['esxi']['hostport']
     esxi.esxi_disk_store = settings['esxi']['diskstore']
     esxi.esxi_virtual_network = ["VM Network"]
-    esxi.guest_name = "$clonebox"
+    esxi.guest_name = "$template"
     esxi.guest_memsize = "1024"
     esxi.guest_numvcpus = "1"
     esxi.local_allow_overwrite = 'True'
