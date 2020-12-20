@@ -1,0 +1,16 @@
+selinux_booleans:
+   - { name: 'httpd_can_network_connect', state: 'yes', persistent: 'yes' }
+firewall:
+   - { service: 'https', state: 'enabled' }
+
+nginx_state: present
+nginx_config_cleanup: true
+nginx_config_main_upload_enable: true
+nginx_config_main_upload_src: inventories/common/conf/proxy/nginx.conf
+nginx_config_main_upload_dest: /etc/nginx/
+nginx_config_ssl_upload_enable: true
+nginx_config_ssl_upload_crt_src: inventories/dev/conf/proxy/ssl/*.crt
+nginx_config_ssl_upload_crt_dest: /etc/pki/nginx/
+nginx_config_ssl_upload_key_src: inventories/dev/conf/proxy/ssl/*.key
+nginx_config_ssl_upload_key_dest: /etc/pki/nginx/private/
+

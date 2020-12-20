@@ -1,0 +1,4 @@
+nginx_config_ssl_upload_enable: true
+nginx_config_ssl_upload_crt_src: inventories/dev/conf/proxy/ssl/*.crt
+nginx_config_ssl_upload_key_src: inventories/dev/conf/proxy/ssl/*.key
+
