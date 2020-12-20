@@ -5,6 +5,6 @@ esxi:
   hostport: 22                # ESXi ssh port
 
 node:
-  vmclone:  "generic-centos7" # vm clone name
+  vmclone:  "generic-alpine311" # vm clone name
   diskstore: "faststore1"     # datastore for guest OS
   hostname:  "test-template"  # guest host name
