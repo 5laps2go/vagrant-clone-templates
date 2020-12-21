@@ -1,7 +1,8 @@
 esxi:
-  hostname: "192.168.1.31"    # ESXiのIPアドレス
-  username: "root"            # ESXiのログインユーザ
-  password: "Passw0rd!"       # ログインパスワード("prompt:" as manual ops)
-  hostport: 22                # ESXiのsshログインポート
+  hostname: "$esxi"           # ESXi hostname or IP addr
+  username: "root"            # ESXi login user
+  password: "prompt:"         # ESXi login password("prompt:" as manual ops)
+  hostport: 22                # ESXi ssh port
 
-  diskstore: "datastore1"     # location of clone image
+  diskstore: "datastore1"     # datastore to store template
+

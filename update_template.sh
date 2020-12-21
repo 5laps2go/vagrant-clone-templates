@@ -31,8 +31,8 @@ if [ ! -f Vagrantfile ]; then
     fi
 
     read -p "ESXi hostname or IP addr: " esxi
-    read -sp "ESXi password: " passwd
-    echo ""
+    #read -sp "ESXi password: " passwd
+    #echo ""
 
     sed -e "s;\$template;$template;" -e "s;\$basebox;$basebox;" ../Vagrantfile.j2 > Vagrantfile
     sed -e "s;\$esxi;$esxi;" -e "s;\$passwd;$passwd;" ../config.yml.j2 > config.yml
