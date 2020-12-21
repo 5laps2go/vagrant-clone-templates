@@ -1,9 +1,9 @@
 esxi:
-  hostname: "192.168.1.31"    # ESXiのIPアドレス
-  username: "root"            # ESXiのログインユーザ
-  password: "Passw0rd!"       # ログインパスワード("prompt:" as manual ops)
-  hostport: 22                # ESXiのsshログインポート
-  diskstore: "datastore1"     # guest使用するデータストア名
+  hostname: "192.168.1.31"    # ESXi hostname or IP addr
+  username: "root"            # ESXi login user
+  password: "prompt:"         # ESXi login password("prompt:" as manual ops)
+  hostport: 22                # ESXi ssh port
+  diskstore: "datastore1"     # datastore of guest
 
 node:
   hostname: "generic-cloud9"
