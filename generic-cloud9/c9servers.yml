@@ -14,8 +14,8 @@
         state: present
     - name: install rpm packages from a special repo
       dnf:
-        name: ['glibc-static']
-        enablerepo: PowerTools
+        name: ['gcc', 'glibc-static']
+        enablerepo: powertools
         state: present
     - name: git clone cloud9 sdk
       git:

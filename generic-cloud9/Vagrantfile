@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 
     esxi.esxi_disk_store = settings['esxi']['diskstore']
     esxi.esxi_virtual_network = ["VM Network"]
-    esxi.clone_from_vm = 'generic-centos8'
+    esxi.clone_from_vm = 'bento-centos-8'
     esxi.guest_name = settings['node']['hostname']
     esxi.guest_memsize = settings['node']['memory']
     esxi.guest_numvcpus = settings['node']['cpus']

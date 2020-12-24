@@ -7,7 +7,7 @@
 #     whose name has the separator '-' instead of '/' of the specified box.
 #
 
-basebox=`echo $1|tr '-' '/'`              # fix the name when template provided
+basebox=$1
 # verify whether the box is in Vagrant Cloud
 baseboxurl_id=`echo $basebox|sed -e 's/\//\/boxes\//'`
 baseboxurl="https://app.vagrantup.com/$baseboxurl_id"

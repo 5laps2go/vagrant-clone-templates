@@ -6,7 +6,7 @@
 #     It removes vagrant box, destroy template vm, and template environment
 #
 
-basebox=`echo $1|tr '-' '/'`              # fix the name when template provided
+basebox=`echo $1|sed 's/-/\//'`            # fix the name when template provided
 template=`echo $basebox | tr '/' '-'`
 boximage=`echo $basebox | sed 's/\//-VAGRANTSLASH-/'`
 
