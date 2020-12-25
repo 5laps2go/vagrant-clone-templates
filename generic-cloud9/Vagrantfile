@@ -7,30 +7,32 @@ require 'yaml'
 settings = YAML.load_file('config.yaml')
 
 Vagrant.configure("2") do |config|
-  config.vm.box = 'esxi_clone/dummy'		# 公開時はbox名に変更の事！
-  config.vm.define settings['node']['hostname']
-
-  config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
-  config.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
-
+  config.ssh.forward_agent = true
   # preserve ssh insecure key for template preparation
   config.ssh.insert_key = false
 
-  config.vm.provider :vmware_esxi do |esxi|
-    esxi.esxi_hostname = settings['esxi']['hostname']
-    esxi.esxi_username = settings['esxi']['username']
-    esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
-    esxi.esxi_hostport = settings['esxi']['hostport']
+  config.vm.define settings['node']['hostname'] do |node|
+    node.vm.box = 'esxi_clone/dummy'		# 公開時はbox名に変更の事！
+    node.vm.hostname = settings['node']['hostname']
 
-    esxi.esxi_disk_store = settings['esxi']['diskstore']
-    esxi.esxi_virtual_network = ["VM Network"]
-    esxi.clone_from_vm = 'bento-centos-8'
-    esxi.guest_name = settings['node']['hostname']
-    esxi.guest_memsize = settings['node']['memory']
-    esxi.guest_numvcpus = settings['node']['cpus']
-    esxi.guest_disk_type = settings['node']['disk_type']
-    esxi.guest_boot_disk_size = settings['node']['disk_size']
-    esxi.local_allow_overwrite = 'True'
+    node.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+    node.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
+  
+    node.vm.provider :vmware_esxi do |esxi|
+      esxi.esxi_hostname = settings['esxi']['hostname']
+      esxi.esxi_username = settings['esxi']['username']
+      esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
+      esxi.esxi_hostport = settings['esxi']['hostport']
+  
+      esxi.esxi_disk_store = settings['esxi']['diskstore']
+      esxi.esxi_virtual_network = ["VM Network"]
+      esxi.clone_from_vm = 'bento-centos-8'
+      esxi.guest_memsize = settings['node']['memory']
+      esxi.guest_numvcpus = settings['node']['cpus']
+      esxi.guest_disk_type = settings['node']['disk_type']
+      esxi.guest_boot_disk_size = settings['node']['disk_size']
+      esxi.local_allow_overwrite = 'True'
+    end
   end
 
   config.vm.provision "ansible" do |ansible|

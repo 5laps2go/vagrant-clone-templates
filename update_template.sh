@@ -11,7 +11,7 @@ basebox=$1
 # verify whether the box is in Vagrant Cloud
 baseboxurl_id=`echo $basebox|sed -e 's/\//\/boxes\//'`
 baseboxurl="https://app.vagrantup.com/$baseboxurl_id"
-if ! wget --spider $baseboxurl 2>/dev/null; then
+if ! curl -I $baseboxurl -o /dev/null 2>/dev/null; then
    echo "no box found in the Vagrant Cloud"
    exit 1;
 fi

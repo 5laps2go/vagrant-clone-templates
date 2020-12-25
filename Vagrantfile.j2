@@ -7,30 +7,31 @@ require 'yaml'
 settings = YAML.load_file('config.yml')
 
 Vagrant.configure("2") do |config|
-  config.vm.box = '$basebox'
-  config.vm.define '$template'
-
-  config.vm.box_check_update = true
   config.ssh.forward_agent = true
-
-  config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
-  config.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
-
   # preserve ssh insecure key for template preparation
   config.ssh.insert_key = false
 
-  config.vm.provider :vmware_esxi do |esxi|
-    esxi.esxi_hostname = settings['esxi']['hostname']
-    esxi.esxi_username = settings['esxi']['username']
-    esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
-    esxi.esxi_hostport = settings['esxi']['hostport']
-    esxi.esxi_disk_store = settings['esxi']['diskstore']
-    esxi.esxi_virtual_network = ["VM Network"]
+  config.vm.define '$template' do |node|
+    node.vm.box = '$basebox'
+    node.vm.box_check_update = true
 
-    esxi.guest_name = "$template"
-    esxi.guest_memsize = "1024"
-    esxi.guest_numvcpus = "1"
-    esxi.local_allow_overwrite = 'True'
+    node.vm.hostname = '$template'
+    node.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+    node.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
+
+    node.vm.provider :vmware_esxi do |esxi|
+      esxi.esxi_hostname = settings['esxi']['hostname']
+      esxi.esxi_username = settings['esxi']['username']
+      esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
+      esxi.esxi_hostport = settings['esxi']['hostport']
+      esxi.esxi_disk_store = settings['esxi']['diskstore']
+      esxi.esxi_virtual_network = ["VM Network"]
+
+      esxi.guest_name = "$template"
+      esxi.guest_memsize = "1024"
+      esxi.guest_numvcpus = "1"
+      esxi.local_allow_overwrite = 'True'
+    end
   end
 end
 
