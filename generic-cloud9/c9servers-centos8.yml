@@ -1,0 +1,60 @@
+---
+- name: configure c9 server with nginx reverse proxy
+  hosts: c9_servers
+  become: true
+  user: vagrant
+  vars_files:
+    - inventories/common/vars/c9servers.yml
+    - inventories/dev/vars/c9servers.yml
+
+  tasks:
+    - name: install @appstreams and rpm packages
+      dnf:
+        name: ['@nodejs:12', 'python27', 'git', 'nginx', 'postgresql-devel']
+        state: present
+    - name: install rpm packages from a special repo
+      dnf:
+        name: ['gcc', 'glibc-static']
+        enablerepo: powertools
+        state: present
+    - import_tasks: ./tasks/nginx_htpasswd.yml
+    - name: git clone cloud9 sdk
+      git:
+        repo: https://github.com/c9/core.git
+        dest: /opt/c9sdk
+    - name: change owner of c9sdk to vagrant
+      file: path=/opt/c9sdk owner="vagrant" group="vagrant" recurse="yes"
+    - name: check c9/installed for vagrant
+      stat:
+        path: /home/vagrant/.c9/installed
+      register: vagrant_c9_installed
+    - name: c9 SSH installer for vagrant
+      shell: |
+        scripts/install-sdk.sh
+      args:
+        chdir: /opt/c9sdk
+        warn: no
+      become: yes
+      become_user: vagrant
+      when: vagrant_c9_installed.stat.exists == false
+    - name: install c9 systemd unit file
+      template:
+        src: inventories/common/conf/cloud9.service.j2
+        dest: /etc/systemd/system/cloud9.service
+    - name: run c9
+      systemd:
+        state: started
+        name: cloud9.service
+        daemon_reload: yes
+        enabled: yes
+
+  roles:
+    - role: linux-system-roles.selinux
+    - role: linux-system-roles.firewall
+    - role: nginxinc.nginx
+    - role: nginxinc.nginx_config
+
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted

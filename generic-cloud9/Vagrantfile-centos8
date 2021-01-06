@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+# Clone_from_templates test
+#
+require 'yaml'
+settings = YAML.load_file('config.yaml')
+
+Vagrant.configure("2") do |config|
+  config.ssh.forward_agent = true
+  # preserve ssh insecure key for template preparation
+  config.ssh.insert_key = false
+
+  config.vm.define settings['node']['hostname'] do |node|
+    node.vm.box = 'esxi_clone/dummy'		# 公開時はbox名に変更の事！
+    node.vm.hostname = settings['node']['hostname']
+
+    node.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+    node.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
+  
+    node.vm.provider :vmware_esxi do |esxi|
+      esxi.esxi_hostname = settings['esxi']['hostname']
+      esxi.esxi_username = settings['esxi']['username']
+      esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
+      esxi.esxi_hostport = settings['esxi']['hostport']
+  
+      esxi.esxi_disk_store = settings['esxi']['diskstore']
+      esxi.esxi_virtual_network = ["VM Network"]
+      esxi.clone_from_vm = 'bento-centos-8'
+      esxi.guest_memsize = settings['node']['memory']
+      esxi.guest_numvcpus = settings['node']['cpus']
+      esxi.guest_disk_type = settings['node']['disk_type']
+      esxi.guest_boot_disk_size = settings['node']['disk_size']
+      esxi.local_allow_overwrite = 'True'
+    end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "c9servers.yml"
+    ansible.groups = {
+      "c9_servers" => [settings['node']['hostname']]
+    }
+  end
+end
+
