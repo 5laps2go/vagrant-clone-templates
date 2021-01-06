@@ -8,15 +8,19 @@
     - inventories/dev/vars/c9servers.yml
 
   tasks:
-    - name: install @appstreams and rpm packages
-      dnf:
-        name: ['@nodejs:12', 'python27', 'git', 'nginx', 'postgresql-devel']
+    - name: read nodejs repository
+      get_url: url=https://rpm.nodesource.com/setup_12.x dest=/tmp mode=755
+    - name: setup nodejs repository
+      command: /tmp/setup_12.x
+    - name: install rpm packages
+      package:
+        name: nodejs,git,nginx
         state: present
-    - name: install rpm packages from a special repo
-      dnf:
-        name: ['gcc', 'glibc-static']
-        enablerepo: powertools
+    - name: install rpm packages for tmux build
+      package:
+        name: gcc,glibc-static
         state: present
+    - import_tasks: ./tasks/nginx_htpasswd.yml
     - name: git clone cloud9 sdk
       git:
         repo: https://github.com/c9/core.git
@@ -48,8 +52,9 @@
         enabled: yes
 
   roles:
-    - role: linux-system-roles.selinux
-    - role: linux-system-roles.firewall
+    - role: geerlingguy.repo-epel
+#   - role: linux-system-roles.selinux
+#   - role: linux-system-roles.firewall
     - role: nginxinc.nginx
     - role: nginxinc.nginx_config
 
