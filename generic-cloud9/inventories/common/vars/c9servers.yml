@@ -14,6 +14,3 @@ nginx_config_ssl_upload_crt_dest: /etc/pki/nginx/
 nginx_config_ssl_upload_key_src: inventories/dev/conf/proxy/ssl/*.key
 nginx_config_ssl_upload_key_dest: /etc/pki/nginx/private/
 
-c9_basic_auth_user: sample_user
-c9_basic_auth_passwd: sample_password
-

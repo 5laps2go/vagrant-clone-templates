@@ -20,7 +20,7 @@
       package:
         name: gcc,glibc-static
         state: present
-    - import_tasks: ./tasks/nginx_htpasswd.yml
+#   - import_tasks: ./tasks/nginx_htpasswd.yml
     - name: git clone cloud9 sdk
       git:
         repo: https://github.com/c9/core.git
