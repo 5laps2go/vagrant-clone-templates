@@ -58,7 +58,3 @@
     - role: nginxinc.nginx
     - role: nginxinc.nginx_config
 
-
-  handlers:
-    - name: restart nginx
-      service: name=nginx state=restarted
