@@ -4,7 +4,7 @@
 # Clone_from_templates test
 #
 require 'yaml'
-settings = YAML.load_file('config.yaml')
+settings = YAML.load_file('config.yml')
 
 Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
@@ -12,9 +12,9 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   config.vm.define settings['node']['hostname'] do |node|
-    node.vm.box = 'esxi_clone/dummy'		# 公開時はbox名に変更の事！
-    node.vm.hostname = settings['node']['hostname']
+    node.vm.box = settings['vm']['baseos']
 
+    node.vm.hostname = settings['node']['hostname']
     node.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
     node.vm.synced_folder('.', '/vagrantfiles', type: 'rsync', disabled: true)
   
@@ -24,9 +24,10 @@ Vagrant.configure("2") do |config|
       esxi.esxi_password = ENV['ESXI_PASSWD']||settings['esxi']['password']
       esxi.esxi_hostport = settings['esxi']['hostport']
   
-      esxi.esxi_disk_store = settings['esxi']['diskstore']
+      esxi.esxi_disk_store = settings['vm']['diskstore']
+      esxi.clone_from_vm = settings['vm']['cloneos']
+
       esxi.esxi_virtual_network = ["VM Network"]
-      esxi.clone_from_vm = 'bento-centos-7'
       esxi.guest_memsize = settings['node']['memory']
       esxi.guest_numvcpus = settings['node']['cpus']
       esxi.guest_disk_type = settings['node']['disk_type']

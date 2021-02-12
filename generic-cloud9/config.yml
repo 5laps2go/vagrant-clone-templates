@@ -1,9 +1,13 @@
 esxi:
-  hostname: "192.168.1.31"    # ESXi hostname or IP addr
+  hostname: "vmhost.lan"      # ESXi hostname or IP addr
   username: "root"            # ESXi login user
   password: "prompt:"         # ESXi login password("prompt:" as manual ops)
   hostport: 22                # ESXi ssh port
-  diskstore: "datastore1"     # datastore of guest
+
+vm:
+  baseos: "esxi_clone/dummy"  # OS image (dummy for esxi clone)
+  cloneos: "bento-centos-7"   # Clone image if you use esxi clone
+  diskstore: "faststore1"     # datastore of guest
 
 node:
   hostname: "generic-cloud9"
