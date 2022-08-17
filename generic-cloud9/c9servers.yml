@@ -51,6 +51,12 @@
         daemon_reload: yes
         enabled: yes
 
+  pre_tasks:
+    - name: install packages for nginxinc.nginx
+      package:
+        name: patch,pcre2
+        state: present
+
   roles:
     - role: geerlingguy.repo-epel
 #   - role: linux-system-roles.selinux

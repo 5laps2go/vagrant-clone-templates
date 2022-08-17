@@ -7,7 +7,7 @@ esxi:
 vm:
   baseos: "esxi_clone/dummy"  # OS image (dummy for esxi clone)
   cloneos: "bento-centos-7"   # Clone image if you use esxi clone
-  diskstore: "faststore1"     # datastore of guest
+  diskstore: "datastore1"     # datastore of guest
 
 node:
   hostname: "generic-cloud9"
