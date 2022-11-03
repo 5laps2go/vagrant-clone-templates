@@ -7,6 +7,8 @@ require 'yaml'
 settings = YAML.load_file('config.yaml')
 
 Vagrant.configure("2") do |config|
+  # disable 127.0.1.1 hostname entry in /etc/hosts because this box is template
+  config.vm.allow_hosts_modification = false
   config.ssh.forward_agent = true
   # preserve ssh insecure key for template preparation
   config.ssh.insert_key = false
