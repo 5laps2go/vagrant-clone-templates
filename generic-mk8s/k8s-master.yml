@@ -1,0 +1,17 @@
+---
+- name: configure microk8s master server
+  hosts: k8s_master
+  become: true
+  user: vagrant
+  vars_files:
+    - inventories/common/vars/servers.yml
+    - inventories/dev/vars/servers.yml
+
+  tasks:
+    - import_tasks: ./tasks/microk8s.yml
+    - name: prepare cluster acceptance for 600 seconds
+      command: /var/lib/snapd/snap/bin/microk8s add-node -l 600 -t {{ k8s_join_token }}
+
+  roles:
+    - role: geerlingguy.repo-epel
+

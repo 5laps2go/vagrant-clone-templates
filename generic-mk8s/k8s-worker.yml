@@ -1,0 +1,17 @@
+---
+- name: configure microk8s worker server
+  hosts: k8s_workers
+  become: true
+  user: vagrant
+  vars_files:
+    - inventories/common/vars/servers.yml
+    - inventories/dev/vars/servers.yml
+
+  tasks:
+    - import_tasks: ./tasks/microk8s.yml
+    - name: join this worker to the cluster
+      command: sh -c 'until /var/lib/snapd/snap/bin/microk8s join "{{ k8s_master_ip }}:25000/{{ k8s_join_token }}"; do sleep 7; done'
+
+  roles:
+    - role: geerlingguy.repo-epel
+

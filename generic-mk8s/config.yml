@@ -1,0 +1,24 @@
+esxi:
+  hostname: "vmhost.lan"      # ESXi hostname or IP addr
+  username: "root"            # ESXi login user
+  password: "prompt:"         # ESXi login password("prompt:" as manual ops)
+  hostport: 22                # ESXi ssh port
+
+  virtualnetworks:            # network configuration
+#   - "VLAN10"                # primary network interface
+#   - "VM Network"            # additional network interface
+
+vm:
+  baseos: "esxi_clone/dummy"  # OS image (dummy for esxi clone)
+  cloneos: "bento-centos-7"   # Clone image if you use esxi clone
+  #os_type: "centos-64"       # OS type
+  diskstore: "datastore1"     # datastore of guest
+
+
+nodes:
+  - type: "microk8s-node"
+    hostname: "k8s-node"
+    cpus: 2
+    memory: 2048
+    disk_type: "thin"
+

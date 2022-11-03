@@ -1,0 +1,33 @@
+---
+- name: install packages
+  package:
+    name: snapd
+    state: present
+- name: enable snapd.socket
+  ansible.builtin.systemd:
+    name: snapd.socket
+    enabled: yes
+    state: started
+- name: prepare snap environment
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+- name: snap install microk8s
+  snap:
+    name: microk8s
+    channel: 1.24/stable
+    classic: yes
+- name: adding existing user vagrant to group microk8s
+  user:
+    name: vagrant
+    groups: microk8s
+    append: yes
+#- name: wait for microk8s services
+#  command: /var/lib/snapd/snap/bin/microk8s.status --wait-ready
+#- name: enable dns dashboard registry
+#  command: /var/lib/snapd/snap/bin/microk8s.enable dns dashboard registry
+- name: alias kubectl
+  command: snap alias microk8s.kubectl kubectl
+- name: alias helm
+  command: snap alias microk8s.helm3 helm

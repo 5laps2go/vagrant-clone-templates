@@ -1,0 +1,15 @@
+---
+- name: configure microk8s node
+  hosts: k8s-node
+  become: true
+  user: vagrant
+  vars_files:
+    - inventories/common/vars/servers.yml
+    - inventories/dev/vars/servers.yml
+
+  tasks:
+    - import_tasks: ./tasks/microk8s.yml
+
+  roles:
+    - role: geerlingguy.repo-epel
+
