@@ -10,7 +10,7 @@
 basebox=$1
 # verify whether the box is in Vagrant Cloud
 baseboxurl_id=`echo $basebox|sed -e 's/\//\/boxes\//'`
-baseboxurl="https://app.vagrantup.com/$baseboxurl_id"
+baseboxurl="https://portal.cloud.hashicorp.com/vagrant/discover/$baseboxurl_id"
 if ! curl -I $baseboxurl -o /dev/null 2>/dev/null; then
    echo "no box found in the Vagrant Cloud"
    exit 1;
