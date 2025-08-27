@@ -9,9 +9,10 @@
 
 basebox=$1
 # verify whether the box is in Vagrant Cloud
-baseboxurl_id=`echo $basebox|sed -e 's/\//\/boxes\//'`
-baseboxurl="https://portal.cloud.hashicorp.com/vagrant/discover/$baseboxurl_id"
-if ! curl -I $baseboxurl -o /dev/null 2>/dev/null; then
+baseboxurl_id=`echo $basebox|sed -e 's/\//\/box\//'`
+baseboxurl="https://api.cloud.hashicorp.com/vagrant/2022-09-30/registry/$baseboxurl_id/versions"
+boxversion=`curl $baseboxurl 2>/dev/null|jq -e -r .versions[0].name`
+if [ $? -ne 0 ]; then
    echo "no box found in the Vagrant Cloud"
    exit 1;
 fi
@@ -34,7 +35,7 @@ if [ ! -f Vagrantfile ]; then
     #read -sp "ESXi password: " passwd
     #echo ""
 
-    sed -e "s;\$template;$template;" -e "s;\$basebox;$basebox;" ../Vagrantfile.j2 > Vagrantfile
+    sed -e "s;\$template;$template;" -e "s;\$basebox;$basebox;" -e "s;\$boxversion;$boxversion;" ../Vagrantfile.j2 > Vagrantfile
     sed -e "s;\$esxi;$esxi;" -e "s;\$passwd;$passwd;" ../config.yml.j2 > config.yml
 fi
 
@@ -51,6 +52,6 @@ vagrant up
 vagrant halt
 
 # remove esxi image from the box to slim the local disk
-rm ~/.vagrant.d/boxes/$boximage/*/*/*.vmdk
+find ~/.vagrant.d/boxes/$boximage -name '*.vmdk' -exec rm '{}' \;
 
 popd >/dev/null
