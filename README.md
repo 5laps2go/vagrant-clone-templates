@@ -1,7 +1,7 @@
 # vagrant clone templates
 ## how to clone generic/centos7 of vagrant cloud as ESXi cloned box
 ```
-$ ./update_clone.sh generic-centos7
+$ ./update_template.sh generic/centos7
 ESXi hostname or IP addr: YOUR_ESXi_SERVER_NAME_or_IP_ADDR
 ESXi password: 
 ```
